@@ -1,26 +1,31 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './Assets/css/App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import {ContextMenuManager, ContextMenuWorker} from './Components/ContextMenu';
+
+class App extends React.Component {
+    render() {
+        return (
+            <ContextMenuManager>
+                <ContextMenuWorker
+                    contextMenuClassName="context-menu"
+                    contextMenuStyle={{height: 300, width: 300}}
+                >
+                    <div style={{height: 500, border: "1px solid red"}}>
+                        Hello World
+                    </div>
+                    <ContextMenuWorker
+                        contextMenu={"sub-context-menu"}
+                    >
+                        <div>
+                            Math World
+                        </div>
+                    </ContextMenuWorker>
+                </ContextMenuWorker>
+                default context manager
+            </ContextMenuManager>
+        );
+    }
 }
 
 export default App;
