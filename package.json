@@ -1,13 +1,19 @@
 {
-  "name": "context-menu-react",
+  "name": "context-menu-reactjs",
   "description": "A Context Menu made with React",
   "version": "0.1.0",
   "main": "src/index.js",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/ironmanvim/context-menu-react.git"
   },
-  "private": true,
+  "keywords": ["react", "reactjs", "context", "menu", "context-menu", "react-context-menu"],
+  "author": "Vishal Chiluveri",
+  "license": "MIT",
+  "homepage": "https://github.com/ironmanvim/context-menu-react",
+  "bugs": {
+    "url": "https://github.com/ironmanvim/context-menu-react/issues"
+  },
   "dependencies": {
     "react": "^16.11.0",
     "react-dom": "^16.11.0",

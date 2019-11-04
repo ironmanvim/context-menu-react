@@ -171,3 +171,8 @@ export class ContextMenu extends React.Component {
         );
     }
 }
+export default {
+    ContextMenuManager,
+    ContextMenu,
+    ContextMenuWorker
+}
