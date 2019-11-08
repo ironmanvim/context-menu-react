@@ -1,8 +1,8 @@
 {
   "name": "context-menu-reactjs",
   "description": "A Context Menu made with React",
-  "version": "0.1.0",
-  "main": "src/index.js",
+  "version": "0.1.7",
+  "main": "lib/ContextMenu.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/ironmanvim/context-menu-react.git"
@@ -48,15 +48,15 @@
   },
   "devDependencies": {
     "babel-core": "^6.21.0",
-    "babel-loader": "^7.1.4",
+    "babel-loader": "8.0.6",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-0": "^6.24.1",
     "path": "^0.12.7",
-    "prop-types": "latest",
-    "react": "^16.11.0",
-    "react-dom": "^16.11.0",
-    "webpack": "^4.5.0",
+    "prop-types": "^15.6.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "webpack": "4.41.0",
     "webpack-cli": "^3.2.1"
   }
 }

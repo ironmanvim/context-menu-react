@@ -10,9 +10,12 @@ export class ContextMenuManager extends React.Component {
     state = {
         event: null,
         contextMenu: null,
+        contextMenuReference: null,
         contextMenuClassName: null,
         contextMenuStyle: null,
     };
+
+    contextMenuUpdated = false;
 
     changeContextMenu = ({event, contextMenu, contextMenuClassName, contextMenuStyle}) => {
         this.setState({
@@ -21,23 +24,31 @@ export class ContextMenuManager extends React.Component {
             contextMenuClassName,
             contextMenuStyle,
         });
-        if (this.cm) {
-            let {top, left} = event;
-            if (top + this.cm.clientHeight > window.innerHeight) {
-                top = top - this.cm.clientHeight;
+    };
+
+    changeContextMenuPosition = () => {
+        if (this.state.event && this.state.contextMenuReference && !this.contextMenuUpdated) {
+            let cm = this.state.contextMenuReference;
+            let {top, left} = this.state.event;
+            if (top + cm.clientHeight > window.innerHeight) {
+                top = top - cm.clientHeight;
             }
-            if (left + this.cm.clientWidth > window.innerWidth) {
-                left = window.innerWidth - this.cm.clientWidth;
+            if (left + cm.clientWidth > window.innerWidth) {
+                left = window.innerWidth - cm.clientWidth;
             }
-            event = {...event, top, left};
+            let event = {...this.state.event, top, left};
             this.setState({
                 event,
-                contextMenu,
-                contextMenuClassName,
-                contextMenuStyle,
             });
+            this.contextMenuUpdated = true;
+        } else if (!this.state.event || !this.state.contextMenuReference) {
+            this.contextMenuUpdated = false;
         }
     };
+
+    componentDidUpdate() {
+        this.changeContextMenuPosition();
+    }
 
     getChildContext() {
         return {
@@ -52,7 +63,11 @@ export class ContextMenuManager extends React.Component {
                 {
                     this.state.event &&
                     <ContextMenu
-                        reference={(cm) => this.cm = cm}
+                        reference={(cm) => {
+                            this.setState({
+                                contextMenuReference: cm,
+                            });
+                        }}
                         event={this.state.event}
                         contextMenu={this.state.contextMenu}
                         clearContext={() => {
@@ -83,30 +98,22 @@ export class ContextMenuWorker extends React.Component {
 
     contextRenderer = (event) => {
         event.preventDefault();
-        try {
-            let {clientX, clientY} = event;
-            this.context.changeContextMenu({
-                event: {left: clientX, top: clientY},
-                contextMenu: this.props.contextMenu,
-                contextMenuStyle: this.props.contextMenuStyle,
-                contextMenuClassName: this.props.contextMenuClassName,
-            });
-        } catch (e) {
-            this.context.changeContextMenu({
-                event: null,
-                contextMenu: null,
-                contextMenuStyle: null,
-                contextMenuClassName: null,
-            });
-        }
+        event.stopPropagation();
+        let {clientX, clientY} = event;
+        this.context.changeContextMenu({
+            event: {left: clientX, top: clientY},
+            contextMenu: this.props.contextMenu,
+            contextMenuStyle: this.props.contextMenuStyle,
+            contextMenuClassName: this.props.contextMenuClassName,
+        });
     };
 
     componentDidMount() {
-        this.worker.addEventListener("contextmenu", this.contextRenderer, true);
+        this.worker.addEventListener("contextmenu", this.contextRenderer);
     }
 
     componentWillUnmount() {
-        this.worker.removeEventListener("contextmenu", this.contextRenderer, true);
+        this.worker.removeEventListener("contextmenu", this.contextRenderer);
     }
 
     render() {
@@ -165,12 +172,12 @@ export class ContextMenu extends React.Component {
                     }}
                 >
                     {this.props.contextMenu}
-                    {/*{console.log(this.menu.clientHeight, this.menu.clientWidth)}*/}
                 </div>
             </OutsideAlerter>
         );
     }
 }
+
 export default {
     ContextMenuManager,
     ContextMenu,
